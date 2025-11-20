@@ -21,16 +21,15 @@
             margin-bottom: 30px;
         }
 
-        /* * ÖNEMLİ: Butonların kaçış alanı ve konumlandırma referansı
-         */
+        /* Butonların hareket edeceği kapsayıcı alan */
         #button-container {
             display: flex;
             justify-content: center;
             align-items: center;
-            width: 400px; /* Butonların hareket edeceği sabit genişlik */
-            height: 80px;  /* Butonların hareket edeceği sabit yükseklik */
-            position: relative; 
-            margin-bottom: 30px;
+            /* Kaçış alanı için container'a biraz büyük bir alan veriyoruz */
+            width: 500px; 
+            height: 100px; 
+            position: relative; /* Butonların hareket referansı */
         }
 
         .button {
@@ -41,14 +40,13 @@
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
+            position: absolute; /* Butonlar için mutlak konumlandırma */
         }
 
         #yes-button {
             background-color: #4CAF50; /* Yeşil */
             color: white;
-            /* Evet butonu sabit kalır, container'ın soluna konumlanır */
-            position: absolute;
-            left: 0;
+            left: 50px; /* Container'ın soluna doğru konumlandır */
         }
 
         #yes-button:hover {
@@ -59,13 +57,11 @@
         #no-button {
             background-color: #FF6347; /* Kırmızımsı */
             color: white;
-            /* Hayır butonu mutlak konumlanır ve container'ın sağına hizalanır */
-            position: absolute; 
-            right: 0;
-            transition: transform 0.2s ease-out; /* Akıcı kaçış için */
+            right: 50px; /* Container'ın sağına doğru konumlandır */
+            transition: transform 0.2s ease-out; /* Hızlı kaçış animasyonu */
         }
 
-        /* Başarı mesajı stili */
+        /* Cevap mesajı stili */
         #message {
             margin-top: 40px;
             font-size: 1.5em;
@@ -95,71 +91,11 @@
         const messageDiv = document.getElementById('message');
 
         noButton.addEventListener('mouseover', function() {
-            // Kaçış alanı (Butonun kendi boyutunu düşerek sınırlarda kalması sağlanır)
-            const containerWidth = buttonContainer.offsetWidth - noButton.offsetWidth;
-            const containerHeight = buttonContainer.offsetHeight - noButton.offsetHeight;
+            // Kaçış alanı hesaplamaları
+            // Transform ile hareket ettireceğimiz için konteynerin ortasından ne kadar uzağa gidebileceğini hesaplarız.
+            const containerCenter = buttonContainer.offsetWidth / 2;
+            const maxTravel = containerCenter - (noButton.offsetWidth / 2);
 
-            // Rastgele yeni konumlar (0 ile container boyutu arasında)
-            const newX = Math.random() * containerWidth;
-            const newY = Math.random() * containerHeight;
-
-            // Hayır butonu başlangıçta sağda konumlanmıştı (right: 0).
-            // Onu sola itmek için X ekseninde Negatif (-) bir değerle hareket ettirmemiz gerekir.
-            // Bu hesaplama ile butonu konteynerin herhangi bir yerine taşıyabiliriz.
-            
-            // X eksenindeki hareketi (Sağdan sola doğru gitme)
-            // Y eksenindeki hareketi (Yukarıdan aşağı doğru gitme)
-            
-            // Not: Hem 'left: 0' hem de 'right: 0' ı CSS'te sildik, sadece 'position: absolute' kaldı.
-            // Böylece translate ile hareketi daha kolay yöneteceğiz.
-
-            // Mutlak pozisyonu koruyarak, random bir yere taşı
-            noButton.style.position = 'absolute'; // Zaten CSS'te ayarlı ama emin olmak için
-            noButton.style.left = `${newX}px`;
-            noButton.style.top = `${newY}px`;
-            
-            // Tıpkı eskisi gibi rastgele bir yere hareket etme efekti yaratır
-            noButton.style.transform = `translate(0, 0)`; // Transformu sıfırlayalım ki left/top değerleri çalışsın
-        });
-
-        noButton.addEventListener('click', function(event) {
-            // Buton yakalandığında ve tıklanıldığında
-            event.preventDefault(); 
-            alert("Beni yakalayamazsın! Hayır cevabı kabul edilmiyor! 😄");
-            
-            // Tıkladıktan sonra tekrar kaçır
-            const containerWidth = buttonContainer.offsetWidth - noButton.offsetWidth;
-            const containerHeight = buttonContainer.offsetHeight - noButton.offsetHeight;
-            const newX = Math.random() * containerWidth;
-            const newY = Math.random() * containerHeight;
-            noButton.style.left = `${newX}px`;
-            noButton.style.top = `${newY}px`;
-        });
-
-        function handleAnswer(answer) {
-            if (answer === 'yes') {
-                messageDiv.textContent = 'Harika! Gününüzün güzel geçmesine çok sevindim! 🎉';
-                messageDiv.style.display = 'block';
-            }
-        }
-
-        // Sayfa yüklendiğinde butonların başlangıç konumunu ayarlama (Sola ve Sağa hizalama)
-        window.onload = function() {
-            // Container genişliği ve buton boyutu hesaplanır
-            const containerWidth = buttonContainer.offsetWidth;
-            const buttonWidth = noButton.offsetWidth;
-            
-            // Hayır butonunu konteynerin sağına doğru itin
-            // Başlangıçta 250px ötede durmasını sağlıyoruz (bu değer CSS'ten kontrol edilebilir)
-            noButton.style.left = `${containerWidth - buttonWidth}px`; 
-            noButton.style.top = '0px';
-            
-            // Evet butonunu konteynerin soluna hizalayın
-            yesButton.style.left = '0px';
-            yesButton.style.top = '0px';
-        };
-
-    </script>
-
-</body>
-</html>
+            // Yeni rastgele konumlar (Bu kez daha küçük hareket aralığı vererek yakalamayı zorlaştırıyoruz)
+            // X ekseninde -maxTravel'dan +maxTravel'a kadar hareket edebilir.
+            const randomX = (Math.random() * maxTravel * 2) - maxTravel;
