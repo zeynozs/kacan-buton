@@ -45,18 +45,18 @@
             white-space: nowrap; 
         }
 
-        #yes-button {
+        #good-button {
             background-color: #4CAF50; 
             color: white;
             /* Başlangıçta sola konumlandırılır */
         }
 
-        #yes-button:hover {
+        #good-button:hover {
             background-color: #45a049;
             transform: scale(1.05);
         }
 
-        #no-button {
+        #bad-button {
             background-color: #FF6347; 
             color: white;
             /* Başlangıçta sağa konumlandırılır */
@@ -80,44 +80,45 @@
     <h1>Günün nasıl geçti Meryem? 😊</h1>
 
     <div id="button-container">
-        <button id="yes-button" class="button" onclick="handleAnswer('yes')">✅ Evet</button>
-        <button id="no-button" class="button">❌ Hayır</button>
+        <button id="good-button" class="button" onclick="handleAnswer('good')">✅ İyi</button>
+        <button id="bad-button" class="button">❌ Kötü</button>
     </div>
 
     <div id="message"></div>
 
     <script>
-        const noButton = document.getElementById('no-button');
+        const badButton = document.getElementById('bad-button'); // ID güncellendi
+        const goodButton = document.getElementById('good-button'); // ID eklendi
         const buttonContainer = document.getElementById('button-container');
         const messageDiv = document.getElementById('message');
 
         // *** BUTONU KAÇIRAN FONKSİYON ***
         const runAway = function() {
             const containerRect = buttonContainer.getBoundingClientRect();
-            const noButtonRect = noButton.getBoundingClientRect();
+            const badButtonRect = badButton.getBoundingClientRect();
 
             // Butonun kendi boyutunu düşerek sınırların içinde kalmasını sağlarız
-            const newX = Math.random() * (containerRect.width - noButtonRect.width);
-            const newY = Math.random() * (containerRect.height - noButtonRect.height);
+            const newX = Math.random() * (containerRect.width - badButtonRect.width);
+            const newY = Math.random() * (containerRect.height - badButtonRect.height);
 
             // Yeni pozisyonları doğrudan top ve left ile ata
-            noButton.style.left = `${newX}px`;
-            noButton.style.top = `${newY}px`;
+            badButton.style.left = `${newX}px`;
+            badButton.style.top = `${newY}px`;
         };
         
-        // 1. OLAY: Fare butona yaklaştığı anda kaç (Bu olay, butona basmayı imkansız hale getirir).
-        noButton.addEventListener('mouseover', runAway);
+        // 1. OLAY: Fare butona yaklaştığı anda kaç (Tıklamayı imkansız hale getirir).
+        badButton.addEventListener('mouseover', runAway);
 
-        // 2. OLAY: Tıklama olayını tamamen engelle ve uyarı ver (Basılsa bile işlemeyecektir).
-        noButton.addEventListener('click', function(event) {
+        // 2. OLAY: Tıklama olayını tamamen engelle ve uyarı ver.
+        badButton.addEventListener('click', function(event) {
             event.preventDefault(); // Tıklama olayının varsayılan hareketini durdurur
-            alert("Yakalamaya çalıştın! Ama Hayır cevabı kabul edilmiyor! 😉");
+            alert("Yakalamaya çalıştın! Ama 'Kötü' cevabı kabul edilmiyor! 😉");
             runAway(); // Tıklamaya çalışılınca tekrar kaçır.
         });
 
-        // EVET cevabını işleyen fonksiyon
+        // İYİ cevabını işleyen fonksiyon
         function handleAnswer(answer) {
-            if (answer === 'yes') {
+            if (answer === 'good') {
                 messageDiv.textContent = 'Harika! Günün güzel geçmesine çok sevindim Meryem! 🎉';
                 messageDiv.style.display = 'block';
             }
@@ -125,23 +126,21 @@
         
         // Sayfa yüklendiğinde butonların başlangıç konumunu ayarla
         window.onload = function() {
-            const yesButton = document.getElementById('yes-button');
-            const noButton = document.getElementById('no-button');
             const containerWidth = buttonContainer.offsetWidth;
             const containerHeight = buttonContainer.offsetHeight;
             const horizontalGap = 30; // Butonlar arası boşluk
             
-            // Evet butonu (sol tarafta)
-            const yesLeft = (containerWidth / 2) - yesButton.offsetWidth - horizontalGap;
-            const centerTop = (containerHeight / 2) - (yesButton.offsetHeight / 2);
+            // İyi butonu (sol tarafta)
+            const goodLeft = (containerWidth / 2) - goodButton.offsetWidth - horizontalGap;
+            const centerTop = (containerHeight / 2) - (goodButton.offsetHeight / 2);
 
-            yesButton.style.left = `${yesLeft}px`; 
-            yesButton.style.top = `${centerTop}px`;
+            goodButton.style.left = `${goodLeft}px`; 
+            goodButton.style.top = `${centerTop}px`;
 
-            // Hayır butonu (sağ tarafta)
-            const noLeft = (containerWidth / 2) + horizontalGap;
-            noButton.style.left = `${noLeft}px`; 
-            noButton.style.top = `${centerTop}px`;
+            // Kötü butonu (sağ tarafta)
+            const badLeft = (containerWidth / 2) + horizontalGap;
+            badButton.style.left = `${badLeft}px`; 
+            badButton.style.top = `${centerTop}px`;
         };
     </script>
 
