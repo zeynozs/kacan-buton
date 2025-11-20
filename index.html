@@ -1,168 +1,162 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Meryem — Günün nasıl geçti?</title>
-  <style>
-    :root{--bg:#0f172a;--card:#0b1220;--accent:#7c3aed;--muted:#94a3b8;--glass: rgba(255,255,255,0.03)}
-    html,body{height:100%;margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial}
-    body{display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#071033 0%,#081126 50%, #02111a 100%);color:#e6eef8}
-    .card{width:min(720px,94vw);background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));backdrop-filter: blur(6px);border-radius:16px;padding:36px;box-shadow:0 8px 30px rgba(2,6,23,0.7);position:relative;overflow:hidden}
-    h1{margin:0 0 8px;font-size:28px}
-    p.lead{margin:0 0 18px;color:var(--muted)}
-    .stage{height:260px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.02));display:flex;align-items:center;justify-content:center;position:relative}
-    .btn-row{position:absolute;left:50%;transform:translateX(-50%);bottom:28px;display:flex;gap:18px}
-    button{appearance:none;border:0;padding:12px 20px;border-radius:10px;font-weight:600;cursor:pointer;box-shadow:0 6px 18px rgba(2,6,23,0.6);transition:transform .15s ease, box-shadow .15s ease}
-    .yes{background:linear-gradient(90deg, #34d399, #10b981);color:#052014}
-    .no{background:linear-gradient(90deg,#f97316,#fb7185);color:#2a0508;position:absolute}
-    .message{position:absolute;top:22px;right:22px;background:var(--glass);padding:10px 14px;border-radius:10px;color:var(--muted);font-size:13px}
-    .confetti{pointer-events:none;position:absolute;inset:0;overflow:hidden}
-    @media (max-width:480px){.stage{height:220px}.btn-row{bottom:18px}}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Günün Nasıl Geçti Meryem?</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            overflow: hidden; /* Butonların dışarı taşmasını engellemek için */
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        /* Butonların hareket edeceği kapsayıcı alan */
+        #button-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 600px; /* Daha geniş bir kaçış alanı */
+            height: 200px; /* Daha yüksek bir kaçış alanı */
+            position: relative; /* Butonların hareket referansı */
+            border: 1px dashed #ccc; /* Hata ayıklama için geçici, sonra kaldırabilirsiniz */
+            box-sizing: border-box; /* Padding ve border genişliğe dahil olsun */
+        }
+
+        .button {
+            padding: 15px 30px;
+            font-size: 1.2em;
+            cursor: pointer;
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease-out; /* Butonun akıcı hareket etmesi için */
+            position: absolute; /* Mutlak konumlandırma */
+            white-space: nowrap; /* Buton metninin satır atlamasını engelle */
+        }
+
+        #yes-button {
+            background-color: #4CAF50; /* Yeşil */
+            color: white;
+            /* İlk konumlandırma */
+            left: 150px; 
+            top: 80px;
+            transform: translate(-50%, -50%); /* Ortalamak için */
+        }
+
+        #yes-button:hover {
+            background-color: #45a049;
+            transform: scale(1.05) translate(-50%, -50%);
+        }
+
+        #no-button {
+            background-color: #FF6347; /* Kırmızımsı */
+            color: white;
+            /* İlk konumlandırma */
+            right: 150px; 
+            top: 80px;
+            transform: translate(50%, -50%); /* Ortalamak için */
+        }
+
+        /* Cevap mesajı stili */
+        #message {
+            margin-top: 40px;
+            font-size: 1.5em;
+            color: #333;
+            display: none;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+    </style>
 </head>
 <body>
-  <main class="card">
-    <div style="display:flex;align-items:center;gap:14px;">
-      <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='48' height='48'><rect rx='10' width='48' height='48' fill='%237c3aed'/><text x='50%' y='55%' font-size='22' text-anchor='middle' fill='white' font-family='Arial'>M</text></svg>" alt="avatar" style="width:48px;height:48px;border-radius:10px;" />
-      <div>
-        <h1>Günün nasıl geçti, Meryem?</h1>
-        <p class="lead">Kısa cevapla: "Evet" veya "Hayır" — Hangisine tıklıyorsun?</p>
-      </div>
+
+    <h1>Günün nasıl geçti Meryem? 😊</h1>
+
+    <div id="button-container">
+        <button id="yes-button" class="button" onclick="handleAnswer('yes')">✅ Evet</button>
+        <button id="no-button" class="button">❌ Hayır</button>
     </div>
 
-    <div class="stage" id="stage">
-      <div id="centerText" style="text-align:center">
-        <p style="font-size:20px;margin:0 14px 6px;">Merhaba Meryem — bize söyle, günün nasıldı?</p>
-        <p style="margin:0;color:var(--muted);">Dürüst ol, ama dikkat: bazı düğmeler kaçabiliyor 😄</p>
-      </div>
+    <div id="message"></div>
 
-      <div class="message" id="miniMsg">Hazır olduğunda bir butona bas.</div>
+    <script>
+        const noButton = document.getElementById('no-button');
+        const buttonContainer = document.getElementById('button-container');
+        const messageDiv = document.getElementById('message');
 
-      <div class="btn-row" id="btnRow">
-        <button id="yesBtn" class="yes">Evet</button>
-        <button id="noBtn" class="no">Hayır</button>
-      </div>
+        noButton.addEventListener('mouseover', function() {
+            const containerRect = buttonContainer.getBoundingClientRect();
+            const noButtonRect = noButton.getBoundingClientRect();
 
-      <canvas class="confetti" id="confettiCanvas"></canvas>
-    </div>
-  </main>
+            // Kapsayıcı içinde rastgele yeni koordinatlar hesapla
+            // Butonun kendi genişliğini ve yüksekliğini düşerek sınırların içinde kalmasını sağlarız
+            const newX = Math.random() * (containerRect.width - noButtonRect.width);
+            const newY = Math.random() * (containerRect.height - noButtonRect.height);
 
-  <script>
-    const yesBtn = document.getElementById('yesBtn');
-    const noBtn = document.getElementById('noBtn');
-    const miniMsg = document.getElementById('miniMsg');
-    const stage = document.getElementById('stage');
-    const btnRow = document.getElementById('btnRow');
-    const centerText = document.getElementById('centerText');
-    const confettiCanvas = document.getElementById('confettiCanvas');
-    const ctx = confettiCanvas.getContext('2d');
+            // Yeni pozisyonları doğrudan top ve left ile ata
+            noButton.style.left = `${newX}px`;
+            noButton.style.top = `${newY}px`;
+            // Transformu sıfırla ki left/top değerleri dominant olsun
+            noButton.style.transform = `translate(0, 0)`; 
+        });
 
-    // Resize canvas
-    function resizeCanvas(){confettiCanvas.width = stage.clientWidth; confettiCanvas.height = stage.clientHeight}
-    window.addEventListener('resize', resizeCanvas); resizeCanvas();
+        noButton.addEventListener('click', function(event) {
+            event.preventDefault(); // Varsayılan tıklama olayını engelle
+            alert("Beni yakalayamazsın! Hayır cevabı kabul edilmiyor! 😄");
+            
+            // Tıkladıktan sonra butonu tekrar rastgele bir yere gönder
+            const containerRect = buttonContainer.getBoundingClientRect();
+            const noButtonRect = noButton.getBoundingClientRect();
 
-    // Yes button click
-    yesBtn.addEventListener('click', ()=>{
-      centerText.innerHTML = '<p style="font-size:22px;margin:0">Günün iyi geçmesine çok sevindim 🎉</p><p style="margin-top:8px;color:var(--muted)">Benimle paylaştığın için teşekkürler, Meryem.</p>';
-      miniMsg.textContent = 'Ne güzel!';
-      // disable buttons
-      yesBtn.disabled = true; noBtn.disabled = true; yesBtn.style.opacity = '0.95'; noBtn.style.opacity = '0.6';
-      launchConfetti();
-    });
+            const newX = Math.random() * (containerRect.width - noButtonRect.width);
+            const newY = Math.random() * (containerRect.height - noButtonRect.height);
 
-    // Make the 'Hayır' button dodge on hover/click
-    function randomPositionForNo(){
-      const stageRect = stage.getBoundingClientRect();
-      const btnRect = noBtn.getBoundingClientRect();
-      const padding = 12; // keep away from edges
-      const maxX = stageRect.width - btnRect.width - padding;
-      const maxY = stageRect.height - btnRect.height - padding;
-      // If cannot compute properly, fallback
-      if(maxX <= 0 || maxY <= 0) return;
-      const x = Math.floor(Math.random() * maxX) + padding;
-      const y = Math.floor(Math.random() * maxY) + padding;
-      // Move noBtn relative to stage
-      noBtn.style.left = x + 'px';
-      noBtn.style.top = y + 'px';
-      // Keep yes button at the bottom center
-      btnRow.style.left = '50%';
-      btnRow.style.transform = 'translateX(-50%)';
-    }
+            noButton.style.left = `${newX}px`;
+            noButton.style.top = `${newY}px`;
+            noButton.style.transform = `translate(0, 0)`; 
+        });
 
-    // Initially position buttons: yes in normal flow, no absolute within stage
-    function initPositions(){
-      // place btnRow centered bottom to provide yes base
-      btnRow.style.position = 'absolute';
-      btnRow.style.left = '50%';
-      btnRow.style.bottom = '18px';
-      btnRow.style.transform = 'translateX(-50%)';
-      // extract yes and no from row but keep stacking
-      yesBtn.style.position = 'relative';
-      noBtn.style.position = 'absolute';
-      // place no near the right of the row to start
-      const startX = Math.max(20, (stage.clientWidth/2)+40);
-      noBtn.style.left = startX + 'px';
-      noBtn.style.top = (stage.clientHeight - 80) + 'px';
-    }
-    initPositions();
-    window.addEventListener('resize', initPositions);
-
-    // On mouseenter, move away
-    let dodgeCount = 0;
-    noBtn.addEventListener('mouseenter', ()=>{
-      dodgeCount++;
-      miniMsg.textContent = '';
-      // enlarge randomness with attempts
-      for(let i=0;i<1;i++) randomPositionForNo();
-    });
-    // Also move on click (in case user manages to click)
-    noBtn.addEventListener('click',(e)=>{
-      e.preventDefault();
-      dodgeCount++;
-      miniMsg.textContent = '';
-      randomPositionForNo();
-    });
-
-    // Simple confetti
-    function launchConfetti(){
-      const pieces = [];
-      const W = confettiCanvas.width; const H = confettiCanvas.height;
-      function rand(min,max){return Math.random()*(max-min)+min}
-      for(let i=0;i<120;i++){
-        pieces.push({x:W/2, y:H/2, vx:rand(-6,6), vy:rand(-10,-2), r:rand(4,9), rot:rand(0,360), vr:rand(-0.2,0.2)})
-      }
-      let t = 0;
-      function step(){
-        ctx.clearRect(0,0,W,H);
-        for(const p of pieces){
-          p.x += p.vx; p.y += p.vy; p.vy += 0.18; p.rot += p.vr;
-          ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot);
-          ctx.fillRect(-p.r/2,-p.r/2,p.r,p.r);
-          ctx.restore();
+        function handleAnswer(answer) {
+            if (answer === 'yes') {
+                messageDiv.textContent = 'Harika! Günün güzel geçmesine çok sevindim Meryem! 🎉';
+                messageDiv.style.display = 'block';
+            }
         }
-        t+=1;
-        if(t<220) requestAnimationFrame(step);
-        else ctx.clearRect(0,0,W,H);
-      }
-      step();
-    }
 
-    // Small accessibility: keyboard support
-    yesBtn.addEventListener('keydown',(e)=>{ if(e.key==='Enter' || e.key===' ') yesBtn.click(); });
-    noBtn.addEventListener('keydown',(e)=>{ if(e.key==='Enter' || e.key===' ') noBtn.click(); });
+        // Sayfa yüklendiğinde butonların başlangıç konumunu ayarla
+        window.onload = function() {
+            // Butonların konumlarını, container'ın ortasına göre hizalamak için dinamik hesaplama
+            const yesButton = document.getElementById('yes-button');
+            const noButton = document.getElementById('no-button');
+            const containerWidth = buttonContainer.offsetWidth;
+            const containerHeight = buttonContainer.offsetHeight;
 
-    // Ensure no button never goes outside bounds on transitions
-    setInterval(()=>{
-      // keep noBtn inside stage
-      const sRect = stage.getBoundingClientRect();
-      const bRect = noBtn.getBoundingClientRect();
-      const relLeft = bRect.left - sRect.left;
-      const relTop = bRect.top - sRect.top;
-      if(relLeft < 6 || relTop < 6 || relLeft + bRect.width > sRect.width - 6 || relTop + bRect.height > sRect.height - 6){
-        randomPositionForNo();
-      }
-    },1000);
-  </script>
+            // Evet butonu (sol tarafta)
+            yesButton.style.left = `${(containerWidth / 2) - yesButton.offsetWidth - 30}px`; // Ortadan sola doğru
+            yesButton.style.top = `${(containerHeight / 2) - (yesButton.offsetHeight / 2)}px`;
+            yesButton.style.transform = `translate(0, 0)`; // Baştaki transformu sıfırla
+
+            // Hayır butonu (sağ tarafta)
+            noButton.style.left = `${(containerWidth / 2) + 30}px`; // Ortadan sağa doğru
+            noButton.style.top = `${(containerHeight / 2) - (noButton.offsetHeight / 2)}px`;
+            noButton.style.transform = `translate(0, 0)`; // Baştaki transformu sıfırla
+        };
+
+    </script>
+
 </body>
 </html>
