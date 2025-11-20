@@ -112,7 +112,7 @@
     let dodgeCount = 0;
     noBtn.addEventListener('mouseenter', ()=>{
       dodgeCount++;
-      miniMsg.textContent = dodgeCount > 6 ? 'Gerçekten hayır mı demek istiyorsun? 🤔' : 'Hey, dikkat! Buton kaçıyor.';
+      miniMsg.textContent = '';
       // enlarge randomness with attempts
       for(let i=0;i<1;i++) randomPositionForNo();
     });
@@ -120,7 +120,7 @@
     noBtn.addEventListener('click',(e)=>{
       e.preventDefault();
       dodgeCount++;
-      miniMsg.textContent = 'Tıkladın ama yine kaçtı! 😂';
+      miniMsg.textContent = '';
       randomPositionForNo();
     });
 
