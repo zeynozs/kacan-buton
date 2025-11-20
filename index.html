@@ -1,162 +1,56 @@
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Günün Nasıl Geçti Meryem?</title>
-    <style>
-        body {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
-            overflow: hidden; /* Butonların dışarı taşmasını engellemek için */
-        }
-
-        h1 {
-            color: #333;
-            margin-bottom: 30px;
-        }
-
-        /* Butonların hareket edeceği kapsayıcı alan */
-        #button-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 600px; /* Daha geniş bir kaçış alanı */
-            height: 200px; /* Daha yüksek bir kaçış alanı */
-            position: relative; /* Butonların hareket referansı */
-            border: 1px dashed #ccc; /* Hata ayıklama için geçici, sonra kaldırabilirsiniz */
-            box-sizing: border-box; /* Padding ve border genişliğe dahil olsun */
-        }
-
-        .button {
-            padding: 15px 30px;
-            font-size: 1.2em;
-            cursor: pointer;
-            border: none;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: all 0.2s ease-out; /* Butonun akıcı hareket etmesi için */
-            position: absolute; /* Mutlak konumlandırma */
-            white-space: nowrap; /* Buton metninin satır atlamasını engelle */
-        }
-
-        #yes-button {
-            background-color: #4CAF50; /* Yeşil */
-            color: white;
-            /* İlk konumlandırma */
-            left: 150px; 
-            top: 80px;
-            transform: translate(-50%, -50%); /* Ortalamak için */
-        }
-
-        #yes-button:hover {
-            background-color: #45a049;
-            transform: scale(1.05) translate(-50%, -50%);
-        }
-
-        #no-button {
-            background-color: #FF6347; /* Kırmızımsı */
-            color: white;
-            /* İlk konumlandırma */
-            right: 150px; 
-            top: 80px;
-            transform: translate(50%, -50%); /* Ortalamak için */
-        }
-
-        /* Cevap mesajı stili */
-        #message {
-            margin-top: 40px;
-            font-size: 1.5em;
-            color: #333;
-            display: none;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-    </style>
-</head>
-<body>
-
-    <h1>Günün nasıl geçti Meryem? 😊</h1>
-
-    <div id="button-container">
-        <button id="yes-button" class="button" onclick="handleAnswer('yes')">✅ Evet</button>
-        <button id="no-button" class="button">❌ Hayır</button>
-    </div>
-
-    <div id="message"></div>
-
-    <script>
+<script>
         const noButton = document.getElementById('no-button');
         const buttonContainer = document.getElementById('button-container');
         const messageDiv = document.getElementById('message');
 
-        noButton.addEventListener('mouseover', function() {
+        // *** HAYIR BUTONUNU KAÇIRAN ANA FONKSİYON ***
+        const runAway = function() {
             const containerRect = buttonContainer.getBoundingClientRect();
             const noButtonRect = noButton.getBoundingClientRect();
 
-            // Kapsayıcı içinde rastgele yeni koordinatlar hesapla
-            // Butonun kendi genişliğini ve yüksekliğini düşerek sınırların içinde kalmasını sağlarız
+            // Butonun kendi boyutunu düşerek sınırlarda kalmasını sağla
             const newX = Math.random() * (containerRect.width - noButtonRect.width);
             const newY = Math.random() * (containerRect.height - noButtonRect.height);
 
             // Yeni pozisyonları doğrudan top ve left ile ata
             noButton.style.left = `${newX}px`;
             noButton.style.top = `${newY}px`;
-            // Transformu sıfırla ki left/top değerleri dominant olsun
             noButton.style.transform = `translate(0, 0)`; 
-        });
+        };
+        
+        // 1. Olay: Fare butona yaklaştığı anda kaç.
+        noButton.addEventListener('mouseover', runAway);
 
+        // 2. Olay: Butona tıklama olayını tamamen engelle (Bu, butona basılmamasını sağlar).
         noButton.addEventListener('click', function(event) {
             event.preventDefault(); // Varsayılan tıklama olayını engelle
-            alert("Beni yakalayamazsın! Hayır cevabı kabul edilmiyor! 😄");
-            
-            // Tıkladıktan sonra butonu tekrar rastgele bir yere gönder
-            const containerRect = buttonContainer.getBoundingClientRect();
-            const noButtonRect = noButton.getBoundingClientRect();
-
-            const newX = Math.random() * (containerRect.width - noButtonRect.width);
-            const newY = Math.random() * (containerRect.height - noButtonRect.height);
-
-            noButton.style.left = `${newX}px`;
-            noButton.style.top = `${newY}px`;
-            noButton.style.transform = `translate(0, 0)`; 
+            alert("Yakalamaya çalıştın! Ama Hayır cevabını kabul etmiyorum! 😉");
+            runAway(); // Tıklamaya çalışılınca tekrar kaçır.
         });
 
+        // EVET cevabını işleyen fonksiyon
         function handleAnswer(answer) {
             if (answer === 'yes') {
                 messageDiv.textContent = 'Harika! Günün güzel geçmesine çok sevindim Meryem! 🎉';
                 messageDiv.style.display = 'block';
             }
         }
-
+        
         // Sayfa yüklendiğinde butonların başlangıç konumunu ayarla
         window.onload = function() {
-            // Butonların konumlarını, container'ın ortasına göre hizalamak için dinamik hesaplama
             const yesButton = document.getElementById('yes-button');
             const noButton = document.getElementById('no-button');
             const containerWidth = buttonContainer.offsetWidth;
             const containerHeight = buttonContainer.offsetHeight;
 
             // Evet butonu (sol tarafta)
-            yesButton.style.left = `${(containerWidth / 2) - yesButton.offsetWidth - 30}px`; // Ortadan sola doğru
+            yesButton.style.left = `${(containerWidth / 2) - yesButton.offsetWidth - 30}px`; 
             yesButton.style.top = `${(containerHeight / 2) - (yesButton.offsetHeight / 2)}px`;
-            yesButton.style.transform = `translate(0, 0)`; // Baştaki transformu sıfırla
+            yesButton.style.transform = `translate(0, 0)`; 
 
             // Hayır butonu (sağ tarafta)
-            noButton.style.left = `${(containerWidth / 2) + 30}px`; // Ortadan sağa doğru
+            noButton.style.left = `${(containerWidth / 2) + 30}px`; 
             noButton.style.top = `${(containerHeight / 2) - (noButton.offsetHeight / 2)}px`;
-            noButton.style.transform = `translate(0, 0)`; // Baştaki transformu sıfırla
+            noButton.style.transform = `translate(0, 0)`; 
         };
-
     </script>
-
-</body>
-</html>
