@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bugün Nasıl Geçti?</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        #button-container {
+            display: flex;
+            gap: 50px; /* Butonlar arası boşluk */
+            position: relative; /* Hayır butonu kaçarken bu kapsayıcı içinde kalması için */
+        }
+
+        .button {
+            padding: 15px 30px;
+            font-size: 1.2em;
+            cursor: pointer;
+            border: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        #yes-button {
+            background-color: #4CAF50; /* Yeşil */
+            color: white;
+        }
+
+        #yes-button:hover {
+            background-color: #45a049;
+            transform: scale(1.05);
+        }
+
+        #no-button {
+            background-color: #FF6347; /* Kırmızımsı */
+            color: white;
+            /* Kaçma animasyonları için gerekli ayarlar */
+            position: absolute; /* Mutlak konumlandırma */
+            left: 100%; /* Başlangıçta sağdaki yerini koruması için */
+            transform: translateX(-100%); /* Konumunu tam ayarlama */
+        }
+
+        /* Başarı mesajı stili */
+        #message {
+            margin-top: 40px;
+            font-size: 1.5em;
+            color: #333;
+            display: none;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Bugün güzel geçti mi? 🤔</h1>
+
+    <div id="button-container">
+        <button id="yes-button" class="button" onclick="handleAnswer('yes')">✅ Evet</button>
+        <button id="no-button" class="button">❌ Hayır</button>
+    </div>
+
+    <div id="message"></div>
+
+    <script>
+        const noButton = document.getElementById('no-button');
+        const buttonContainer = document.getElementById('button-container');
+        const messageDiv = document.getElementById('message');
+
+        // Container'ın boyutlarını hesaplamak için, önce DOM'da yerleşmesi lazım.
+        // Konteynerin genişliğini alıp butonu doğru konumlandırmak için
+        // Hayır butonu, evet butonunun konumundan başlayıp konteynerin sağ tarafına konumlanır.
+        // CSS'deki 'position: absolute' ve 'left: 100%; transform: translateX(-100%);' bu hizalamayı sağlar.
+
+        noButton.addEventListener('mouseover', function() {
+            // Kaçış alanı (konteynerin boyutlarına göre hesaplanır)
+            const containerRect = buttonContainer.getBoundingClientRect();
+
+            // Yeni rastgele konumlar (containerRect içinde kalması için)
+            // 'noButton.offsetWidth' ve 'noButton.offsetHeight' kendi boyutlarıdır.
+            const newX = Math.random() * (containerRect.width - noButton.offsetWidth);
+            const newY = Math.random() * (containerRect.height - noButton.offsetHeight);
+
+            // Yeni pozisyonları CSS'de ayarla
+            // 'position: relative' ve 'left/top' kullanmak yerine,
+            // 'position: absolute' olan butonu 'transform: translate' ile hareket ettirmek daha akıcıdır.
+
+            // Not: CSS'de butonun başlangıç pozisyonu ayarlandığı için,
+            // burada yeni pozisyonu sadece X ve Y'de hareket ettirerek belirliyoruz.
+            // Bu, butonu konteynerin her yerine hareket ettirecektir.
+            noButton.style.position = 'absolute';
+            noButton.style.transition = 'transform 0.2s ease-out'; // Akıcı geçiş
+            noButton.style.transform = `translate(${newX}px, ${newY}px)`;
+        });
+
+        noButton.addEventListener('click', function(event) {
+            // Hayır'a basılamamasını sağlamak için.
+            event.preventDefault(); // Varsayılan tıklama olayını engelle
+            alert("Beni yakalayamazsın! Hayır cevabı kabul edilmiyor! 😄");
+            // Tıkladıktan sonra butonu farklı bir yere de gönderebiliriz.
+            const newX = Math.random() * (buttonContainer.offsetWidth - noButton.offsetWidth);
+            const newY = Math.random() * (buttonContainer.offsetHeight - noButton.offsetHeight);
+            noButton.style.transform = `translate(${newX}px, ${newY}px)`;
+        });
+
+        function handleAnswer(answer) {
+            if (answer === 'yes') {
+                messageDiv.textContent = 'Harika! Gününüzün güzel geçmesine çok sevindim! 🎉';
+            } else {
+                // Bu kısım normalde çalışmaz çünkü Hayır butonu yakalanamaz.
+                messageDiv.textContent = 'Üzgünüm, "Hayır" butonu benden kaçtı. Belki de evet demeliyiz? 😉';
+            }
+            messageDiv.style.display = 'block';
+        }
+    </script>
+
+</body>
+</html>
